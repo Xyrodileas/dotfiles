@@ -10,27 +10,30 @@ Vagrant.configure("2") do |config|
   
     # Customize the amount of memory on the VM:
     vb.name = "archlinux_dotfiles"
-    vb.memory = "1024"
+    vb.memory = "2048"
     vb.cpus = 2
   end
 
   config.vm.provision "shell", inline: <<-SHELL
     # SWAP
-    fallocate -l 1G /swapfile
+    fallocate -l 2G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
     swapon /swapfile
     echo "/swapfile none swap defaults 0 0" >> /etc/fstab
     # TMP
-    mount -o remount,size=1G /tmp
+    mount -o remount,size=2G /tmp
     # LOCALE
-    echo "fr_FR.UTF-8 UTF-8" > /etc/locale.gen
+    echo "en_CA.UTF-8 UTF-8" > /etc/locale.gen
     locale-gen
-    echo 'LANG="fr_FR.UTF-8"' > /etc/locale.conf
+    echo 'LANG="en_CA.UTF-8"' > /etc/locale.conf
     # KEYBOARD
-    echo 'KEYMAP=fr' > /etc/vconsole.conf
-    loadkeys fr
-    localectl --no-convert set-x11-keymap fr
+    echo 'KEYMAP=ca' > /etc/vconsole.conf
+    loadkeys ca
+    localectl --no-convert set-x11-keymap ca
+    # Add proxy
+    export http_proxy=http://10.128.58.13:3128/
+    export https_proxy=http://10.128.58.13:3128/
     # UPGRADE
     pacman -Syu --noconfirm
     # DEPS
